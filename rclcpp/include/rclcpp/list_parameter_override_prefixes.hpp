@@ -32,8 +32,8 @@ namespace detail
 */
 std::unordered_set<std::string>
 list_parameter_override_prefixes(
-  const std::map<std::string, rclcpp::ParameterValue> & overrides,
-  std::string prefix);
+    const std::map<std::string, rclcpp::ParameterValue> & overrides,
+    std::string prefix);
 }  // namespace detail
 
 /**
@@ -60,8 +60,8 @@ list_parameter_override_prefixes(
 */
 std::unordered_set<std::string>
 list_parameter_override_prefixes(
-  node_interfaces::NodeInterfaces<node_interfaces::NodeParametersInterface> interfaces,
-  std::string prefix);
+    node_interfaces::NodeInterfaces<node_interfaces::NodeParametersInterface> interfaces,
+    std::string prefix);
 }  // namespace rclcpp
 
 #endif  // RCLCPP__LIST_PARAMETER_OVERRIDE_PREFIXES_HPP_
