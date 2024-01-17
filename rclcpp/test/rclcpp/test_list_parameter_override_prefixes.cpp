@@ -19,56 +19,50 @@
 
 #include <rclcpp/list_parameter_override_prefixes.hpp>
 
-TEST(parameter, list_parameter_override_prefixes)
-{
+TEST(parameter, list_parameter_override_prefixes) {
   const std::map<std::string, rclcpp::ParameterValue> overrides = {
-    {"foo", {}},
-    {"foo.baz", {}},
-    {"foo.bar", {}},
-    {"foo.bar.baz", {}},
-    {"foo.bar.baz.bing", {}},
-    {"foobar.baz", {}},
-    {"baz", {}}
-  };
+      {"foo", {}},         {"foo.baz", {}},          {"foo.bar", {}},
+      {"foo.bar.baz", {}}, {"foo.bar.baz.bing", {}}, {"foobar.baz", {}},
+      {"baz", {}}};
 
   {
-    auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "foo");
+    auto matches =
+        rclcpp::detail::list_parameter_override_prefixes(overrides, "foo");
     EXPECT_EQ(2u, matches.size());
     EXPECT_NE(matches.end(), matches.find("foo.baz"));
     EXPECT_NE(matches.end(), matches.find("foo.bar"));
   }
   {
-    auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "foo.bar");
+    auto matches =
+        rclcpp::detail::list_parameter_override_prefixes(overrides, "foo.bar");
     EXPECT_EQ(1u, matches.size());
     EXPECT_NE(matches.end(), matches.find("foo.bar.baz"));
   }
   {
     auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "foo.bar.baz");
+        overrides, "foo.bar.baz");
     EXPECT_EQ(1u, matches.size());
     EXPECT_NE(matches.end(), matches.find("foo.bar.baz.bing"));
   }
   {
-    auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "foo.baz");
+    auto matches =
+        rclcpp::detail::list_parameter_override_prefixes(overrides, "foo.baz");
     EXPECT_EQ(0u, matches.size());
   }
   {
-    auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "foobar");
+    auto matches =
+        rclcpp::detail::list_parameter_override_prefixes(overrides, "foobar");
     EXPECT_EQ(1u, matches.size());
     EXPECT_NE(matches.end(), matches.find("foobar.baz"));
   }
   {
-    auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "dne");
+    auto matches =
+        rclcpp::detail::list_parameter_override_prefixes(overrides, "dne");
     EXPECT_EQ(0u, matches.size());
   }
   {
-    auto matches = rclcpp::detail::list_parameter_override_prefixes(
-      overrides, "");
+    auto matches =
+        rclcpp::detail::list_parameter_override_prefixes(overrides, "");
     EXPECT_EQ(3u, matches.size());
     EXPECT_NE(matches.end(), matches.find("foo"));
     EXPECT_NE(matches.end(), matches.find("foobar"));
