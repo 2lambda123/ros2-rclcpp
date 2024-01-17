@@ -18,49 +18,44 @@
 #include <string>
 #include <unordered_set>
 
-
-namespace rclcpp
-{
-std::unordered_set<std::string>
-list_parameter_override_prefixes(
-    node_interfaces::NodeInterfaces<node_interfaces::NodeParametersInterface> interfaces,
-    std::string prefix)
-{
-    const std::map<std::string, rclcpp::ParameterValue> & overrides =
-        interfaces.get_node_parameters_interface()->get_parameter_overrides();
-    return detail::list_parameter_override_prefixes(overrides, prefix);
+namespace rclcpp {
+std::unordered_set<std::string> list_parameter_override_prefixes(
+    node_interfaces::NodeInterfaces<node_interfaces::NodeParametersInterface>
+        interfaces,
+    std::string prefix) {
+  const std::map<std::string, rclcpp::ParameterValue> &overrides =
+      interfaces.get_node_parameters_interface()->get_parameter_overrides();
+  return detail::list_parameter_override_prefixes(overrides, prefix);
 }
 
-std::unordered_set<std::string>
-detail::list_parameter_override_prefixes(
-    const std::map<std::string, rclcpp::ParameterValue> & overrides,
-    std::string prefix)
-{
-    // TODO(sloretz) ROS 2 must have this in a header somewhere, right?
-    const char kParamSeparator = '.';
+std::unordered_set<std::string> detail::list_parameter_override_prefixes(
+    const std::map<std::string, rclcpp::ParameterValue> &overrides,
+    std::string prefix) {
+  // TODO(sloretz) ROS 2 must have this in a header somewhere, right?
+  const char kParamSeparator = '.';
 
-    // Find all overrides starting with "prefix.", unless the prefix is empty.
-    // If the prefix is empty then look at all parameter overrides.
-    if (!prefix.empty() && prefix.back() != kParamSeparator) {
-        prefix += kParamSeparator;
-    }
+  // Find all overrides starting with "prefix.", unless the prefix is empty.
+  // If the prefix is empty then look at all parameter overrides.
+  if (!prefix.empty() && prefix.back() != kParamSeparator) {
+    prefix += kParamSeparator;
+  }
 
-    std::unordered_set<std::string> output_names;
-    for (const auto & kv : overrides) {
-        const std::string & name = kv.first;
-        if (name.size() <= prefix.size()) {
-            // Too short, no point in checking
-            continue;
-        }
-        assert(prefix.size() < name.size());
-        // TODO(sloretz) use string::starts_with in c++20
-        if (name.rfind(prefix, 0) == 0) {  // if name starts with prefix
-            // Truncate names to the next separator
-            size_t separator_pos = name.find(kParamSeparator, prefix.size());
-            // Insert truncated name
-            output_names.insert(name.substr(0, separator_pos));
-        }
+  std::unordered_set<std::string> output_names;
+  for (const auto &kv : overrides) {
+    const std::string &name = kv.first;
+    if (name.size() <= prefix.size()) {
+      // Too short, no point in checking
+      continue;
     }
-    return output_names;
+    assert(prefix.size() < name.size());
+    // TODO(sloretz) use string::starts_with in c++20
+    if (name.rfind(prefix, 0) == 0) { // if name starts with prefix
+      // Truncate names to the next separator
+      size_t separator_pos = name.find(kParamSeparator, prefix.size());
+      // Insert truncated name
+      output_names.insert(name.substr(0, separator_pos));
+    }
+  }
+  return output_names;
 }
-}  // namespace rclcpp
+} // namespace rclcpp
